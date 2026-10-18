@@ -1,0 +1,187 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "S01",
+      "input": "Planned attendance: 200; venue capacity: 250; budget: ₹2,00,000",
+      "structured_facts": {
+        "attendance": 200,
+        "venue_capacity": 250,
+        "budget_limit": 200000
+      },
+      "hard_constraints": [
+        "Capacity <= 250",
+        "Budget <= 200,000"
+      ],
+      "expected_decisions": {
+        "approval_status": "Approve",
+        "feasible": true
+      }
+    },
+    {
+      "scenario_id": "S02",
+      "input": "Attendance rises from 200 to 280; venue capacity remains 250",
+      "structured_facts": {
+        "attendance": 280,
+        "venue_capacity": 250,
+        "budget_limit": 200000
+      },
+      "hard_constraints": [
+        "Attendance cannot exceed 250"
+      ],
+      "expected_decisions": {
+        "approval_status": "Flag infeasibility",
+        "action": "Propose approved venue change or cap attendance at 250"
+      }
+    },
+    {
+      "scenario_id": "S03",
+      "input": "Venue capacity falls from 300 to 220; registration is 260",
+      "structured_facts": {
+        "attendance_registration": 260,
+        "venue_capacity": 220
+      },
+      "hard_constraints": [
+        "Attendance <= 220"
+      ],
+      "expected_decisions": {
+        "action": "Replan capacity; do not continue with original 260-person layout"
+      }
+    },
+    {
+      "scenario_id": "S04",
+      "input": "Budget cut from ₹2,00,000 to ₹1,60,000; catering and staffing must be revised",
+      "structured_facts": {
+        "old_budget": 200000,
+        "new_budget": 160000
+      },
+      "hard_constraints": [
+        "Total spend <= 1,60,000"
+      ],
+      "expected_decisions": {
+        "action": "Reallocate resources while preserving mandatory staffing and dietary requirements"
+      }
+    },
+    {
+      "scenario_id": "S05",
+      "input": "Proposed stage and seating layout blocks a required emergency exit",
+      "structured_facts": {
+        "layout_issue": "blocks emergency exit"
+      },
+      "hard_constraints": [
+        "Emergency exits must remain unobstructed"
+      ],
+      "expected_decisions": {
+        "approval_status": "Reject",
+        "action": "Propose an alternative layout"
+      }
+    },
+    {
+      "scenario_id": "S06",
+      "input": "Old venue document states capacity 300; signed current notice states 240",
+      "structured_facts": {
+        "old_document_capacity": 300,
+        "current_notice_capacity": 240
+      },
+      "hard_constraints": [
+        "Current approved capacity governs"
+      ],
+      "expected_decisions": {
+        "capacity_to_use": 240,
+        "action": "Identify the old record as superseded"
+      }
+    },
+    {
+      "scenario_id": "S07",
+      "input": "Event moves from 10:00–16:00 to 12:00–18:00",
+      "structured_facts": {
+        "old_schedule": "10:00-16:00",
+        "new_schedule": "12:00-18:00"
+      },
+      "hard_constraints": [
+        "Updated schedule must be used by all departments"
+      ],
+      "expected_decisions": {
+        "action": "Align catering times, staffing shifts, security coverage and budget assumptions"
+      }
+    },
+    {
+      "scenario_id": "S08",
+      "input": "180 attendees, including 20 vegetarian meals and 10 vegan meals",
+      "structured_facts": {
+        "attendance": 180,
+        "vegetarian_meals": 20,
+        "vegan_meals": 10
+      },
+      "hard_constraints": [
+        "Every specified dietary requirement must be covered",
+        "Total meals must cover attendance"
+      ],
+      "expected_decisions": {
+        "minimum_meals_planned": 180,
+        "dietary_action": "Plan at least required quantities for vegetarian and vegan options"
+      }
+    },
+    {
+      "scenario_id": "S09",
+      "input": "Staffing policy requires 1 guard per 50 attendees, rounded up; attendance is 201",
+      "structured_facts": {
+        "attendance": 201,
+        "guard_ratio_rule": "1 guard per 50 attendees, rounded up"
+      },
+      "hard_constraints": [
+        "At least 5 guards"
+      ],
+      "expected_decisions": {
+        "minimum_guards": 5,
+        "action": "Allocate 5 or more guards and align staffing costs"
+      }
+    },
+    {
+      "scenario_id": "S10",
+      "input": "Catering cost ₹450/person for 200 people; total budget ₹1,00,000",
+      "structured_facts": {
+        "attendance": 200,
+        "catering_unit_cost": 450,
+        "total_budget": 100000
+      },
+      "hard_constraints": [
+        "Catering spend <= 100,000"
+      ],
+      "expected_decisions": {
+        "catering_total_cost": 90000,
+        "remaining_budget_limit": 10000,
+        "action": "Leave no more than ₹10,000 for all other spending"
+      }
+    },
+    {
+      "scenario_id": "S11",
+      "input": "Event brief and staffing policy specify different staffing assumptions; the brief is outdated",
+      "structured_facts": {
+        "conflict": "brief vs staffing policy"
+      },
+      "hard_constraints": [
+        "Current approved staffing policy governs"
+      ],
+      "expected_decisions": {
+        "action": "Retrieve current policy and calculate staffing from it"
+      }
+    },
+    {
+      "scenario_id": "S12",
+      "input": "Attendance rises to 240, venue capacity is 260, event duration increases by two hours and budget is reduced",
+      "structured_facts": {
+        "attendance": 240,
+        "venue_capacity": 260,
+        "duration_extension_hours": 2
+      },
+      "hard_constraints": [
+        "Capacity <= 260",
+        "Updated budget ceiling",
+        "Staffing and safety rules still apply"
+      ],
+      "expected_decisions": {
+        "action": "Update catering, staffing, security, budget and schedule consistently"
+      }
+    }
+  ]
+}

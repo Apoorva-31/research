@@ -1,0 +1,188 @@
+{
+  "description": "Gold retrieval evidence mapping for pilot scenarios S01 through S12 to evaluate Recall@5 and Precision@5.",
+  "version": "1.0",
+  "scenarios": [
+    {
+      "scenario_id": "S01",
+      "description": "Standard baseline event within capacity and budget limits.",
+      "gold_documents": [
+        {
+          "document_id": "VENUE-001",
+          "version": "v2",
+          "relevant_chunks": ["VENUE-001-C1"]
+        },
+        {
+          "document_id": "BUDGET-001",
+          "version": "v2",
+          "relevant_chunks": ["BUDGET-001-C1"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S02",
+      "description": "Attendance rises above venue capacity limits.",
+      "gold_documents": [
+        {
+          "document_id": "VENUE-001",
+          "version": "v2",
+          "relevant_chunks": ["VENUE-001-C1", "VENUE-001-C2"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S03",
+      "description": "Venue capacity decreases below current registration.",
+      "gold_documents": [
+        {
+          "document_id": "VENUE-001",
+          "version": "v2",
+          "relevant_chunks": ["VENUE-001-C1"]
+        },
+        {
+          "document_id": "NOTICE-003",
+          "version": "v1",
+          "relevant_chunks": ["NOTICE-003-C1"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S04",
+      "description": "Budget cut forcing resource reallocation.",
+      "gold_documents": [
+        {
+          "document_id": "BUDGET-001",
+          "version": "v2",
+          "relevant_chunks": ["BUDGET-001-C1", "BUDGET-001-C2"]
+        },
+        {
+          "document_id": "CATERING-001",
+          "version": "v2",
+          "relevant_chunks": ["CATERING-001-C1"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S05",
+      "description": "Layout blocks emergency exits, violating safety rules.",
+      "gold_documents": [
+        {
+          "document_id": "VENUE-001",
+          "version": "v2",
+          "relevant_chunks": ["VENUE-001-C2"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S06",
+      "description": "Conflict between old venue document and signed current notice.",
+      "gold_documents": [
+        {
+          "document_id": "NOTICE-006",
+          "version": "v2",
+          "relevant_chunks": ["NOTICE-006-C1"]
+        },
+        {
+          "document_id": "VENUE-001",
+          "version": "v1",
+          "relevant_chunks": ["VENUE-001-HISTORICAL"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S07",
+      "description": "Event timing shift requiring cross-departmental alignment.",
+      "gold_documents": [
+        {
+          "document_id": "BRIEF-001",
+          "version": "v2",
+          "relevant_chunks": ["BRIEF-001-C1"]
+        },
+        {
+          "document_id": "STAFFING-001",
+          "version": "v2",
+          "relevant_chunks": ["STAFFING-001-C1"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S08",
+      "description": "Dietary meal counts and minimum meal distribution rules.",
+      "gold_documents": [
+        {
+          "document_id": "CATERING-001",
+          "version": "v2",
+          "relevant_chunks": ["CATERING-001-C1", "CATERING-001-C2"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S09",
+      "description": "Staffing policy ratio calculation (1 guard per 50 attendees).",
+      "gold_documents": [
+        {
+          "document_id": "STAFFING-001",
+          "version": "v2",
+          "relevant_chunks": ["STAFFING-001-C1", "STAFFING-001-C2"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S10",
+      "description": "Catering cost constraint evaluation against total budget.",
+      "gold_documents": [
+        {
+          "document_id": "BUDGET-001",
+          "version": "v2",
+          "relevant_chunks": ["BUDGET-001-C1"]
+        },
+        {
+          "document_id": "CATERING-001",
+          "version": "v2",
+          "relevant_chunks": ["CATERING-001-C1"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S11",
+      "description": "Conflict between outdated event brief and current staffing policy.",
+      "gold_documents": [
+        {
+          "document_id": "STAFFING-001",
+          "version": "v2",
+          "relevant_chunks": ["STAFFING-001-C1"]
+        },
+        {
+          "document_id": "BRIEF-001",
+          "version": "v1",
+          "relevant_chunks": ["BRIEF-001-OUTDATED"]
+        }
+      ]
+    },
+    {
+      "scenario_id": "S12",
+      "description": "Complex multi-variable update (attendance, duration, budget cuts).",
+      "gold_documents": [
+        {
+          "document_id": "VENUE-001",
+          "version": "v2",
+          "relevant_chunks": ["VENUE-001-C1"]
+        },
+        {
+          "document_id": "BUDGET-001",
+          "version": "v2",
+          "relevant_chunks": ["BUDGET-001-C1"]
+        },
+        {
+          "document_id": "STAFFING-001",
+          "version": "v2",
+          "relevant_chunks": ["STAFFING-001-C1"]
+        },
+        {
+          "document_id": "CATERING-001",
+          "version": "v2",
+          "relevant_chunks": ["CATERING-001-C1"]
+        }
+      ]
+    }
+  ]
+}

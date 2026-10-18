@@ -1,0 +1,13 @@
+event_id,meal_type,required_quantity,unit_cost
+EVT-01,Standard,200,450
+EVT-02,Standard,280,450
+EVT-03,Standard,260,450
+EVT-04,Standard,200,400
+EVT-05,Standard,200,450
+EVT-06,Standard,240,450
+EVT-07,Standard,200,450
+EVT-08,Vegetarian/Vegan,180,450
+EVT-09,Standard,201,450
+EVT-10,Standard,200,450
+EVT-11,Standard,200,450
+EVT-12,Standard,240,450

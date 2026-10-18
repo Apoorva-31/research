@@ -1,0 +1,13 @@
+event_id,date,attendance,venue_id,status
+EVT-01,2026-10-15,200,VENUE-001,Approved
+EVT-02,2026-10-16,280,VENUE-001,Pending Review
+EVT-03,2026-10-17,260,VENUE-002,Pending Review
+EVT-04,2026-10-18,200,VENUE-001,Budget Revision
+EVT-05,2026-10-19,200,VENUE-001,Layout Review
+EVT-06,2026-10-20,240,VENUE-001,Capacity Update
+EVT-07,2026-10-21,200,VENUE-001,Schedule Shift
+EVT-08,2026-10-22,180,VENUE-001,Dietary Review
+EVT-09,2026-10-23,201,VENUE-001,Staffing Review
+EVT-10,2026-10-24,200,VENUE-001,Budget Limit Review
+EVT-11,2026-10-25,200,VENUE-001,Policy Review
+EVT-12,2026-10-26,240,VENUE-003,Complex Revision

@@ -1,0 +1,111 @@
+{
+  "answers": [
+    {
+      "scenario_id": "S01",
+      "expected_decisions": {
+        "status": "approved",
+        "budget_allocation": "within limit"
+      },
+      "hard_constraints": ["Capacity <= 250", "Budget <= 200000"],
+      "evidence_ids": ["VENUE-001_v2", "BUDGET-001_v2"]
+    },
+    {
+      "scenario_id": "S02",
+      "expected_decisions": {
+        "status": "flagged_infeasible",
+        "action": "cap attendance at 250 or change venue"
+      },
+      "hard_constraints": ["Attendance cannot exceed 250"],
+      "evidence_ids": ["VENUE-001_v2"]
+    },
+    {
+      "scenario_id": "S03",
+      "expected_decisions": {
+        "status": "replan_capacity",
+        "action": "adjust layout for 220 maximum"
+      },
+      "hard_constraints": ["Attendance <= 220"],
+      "evidence_ids": ["VENUE-001_v2"]
+    },
+    {
+      "scenario_id": "S04",
+      "expected_decisions": {
+        "status": "reallocate",
+        "max_budget": 160000
+      },
+      "hard_constraints": ["Total spend <= 160000"],
+      "evidence_ids": ["BUDGET-001_v2"]
+    },
+    {
+      "scenario_id": "S05",
+      "expected_decisions": {
+        "status": "rejected",
+        "action": "modify layout"
+      },
+      "hard_constraints": ["Emergency exits must remain unobstructed"],
+      "evidence_ids": ["VENUE-001_v2"]
+    },
+    {
+      "scenario_id": "S06",
+      "expected_decisions": {
+        "capacity_used": 240,
+        "note": "superseded record ignored"
+      },
+      "hard_constraints": ["Current approved capacity governs"],
+      "evidence_ids": ["VENUE-001_v2"]
+    },
+    {
+      "scenario_id": "S07",
+      "expected_decisions": {
+        "schedule": "12:00-18:00",
+        "action": "align all departments"
+      },
+      "hard_constraints": ["Updated schedule must be used by all departments"],
+      "evidence_ids": ["BRIEF-S01"]
+    },
+    {
+      "scenario_id": "S08",
+      "expected_decisions": {
+        "total_meals": 180,
+        "vegetarian": 20,
+        "vegan": 10
+      },
+      "hard_constraints": ["Cover all dietary requirements and total attendance"],
+      "evidence_ids": ["CATERING-001"]
+    },
+    {
+      "scenario_id": "S09",
+      "expected_decisions": {
+        "guards_assigned": 5
+      },
+      "hard_constraints": ["At least 5 guards"],
+      "evidence_ids": ["STAFFING-001_v2"]
+    },
+    {
+      "scenario_id": "S10",
+      "expected_decisions": {
+        "catering_spend": 90000,
+        "remaining_budget": 10000
+      },
+      "hard_constraints": ["Catering spend <= 100000"],
+      "evidence_ids": ["BUDGET-001_v2", "CATERING-001"]
+    },
+    {
+      "scenario_id": "S11",
+      "expected_decisions": {
+        "staffing_basis": "current policy"
+      },
+      "hard_constraints": ["Current approved staffing policy governs"],
+      "evidence_ids": ["STAFFING-001_v2", "BRIEF-S11"]
+    },
+    {
+      "scenario_id": "S12",
+      "expected_decisions": {
+        "attendance": 240,
+        "status": "consistent update"
+      },
+      "hard_constraints": ["Capacity <= 260", "Updated budget ceiling"],
+      "evidence_ids": ["VENUE-001_v2", "BUDGET-001_v2", "STAFFING-001_v2"]
+    }
+  ]
+}
