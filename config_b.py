@@ -55,7 +55,7 @@ def run_configuration_b(scenario_input: str, initial_facts: dict) -> dict:
         staffing_recommendation=[{"role": "Support", "count": 4, "shift_start": "09:00", "shift_end": "17:00"}],
         security_recommendation={"guard_count": 4, "post_assignments": ["Gate 1"]},
         budget_allocation={"catering_spend": 50000.0, "staffing_spend": 20000.0, "security_spend": 10000.0, "other_spend": 5000.0, "total_spend": 85000.0},
-        schedule_alignment={"start_time": "10:00", "end_time": "16:00"},
+    	schedule_alignment={"start_time": "10:00", "end_time": "16:00"},
         rationale="Synthesized via parallel local Ollama B."
     )
 

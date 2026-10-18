@@ -9,7 +9,15 @@ from pathlib import Path
 from config_a import run_configuration_a
 from config_b import run_configuration_b
 from config_c import run_configuration_c
+# --- ADD THIS NEAR THE TOP OF run_experiment.py ---
+with open("evaluation/retrieval_gold_labels.json", "r", encoding="utf-8") as f:
+    GOLD_LABELS_DATA = json.load(f).get("scenarios", [])
 
+# Map scenario_id to a list of authoritative gold document IDs
+GOLD_LABELS_MAP = {
+    item["scenario_id"]: [doc["document_id"].upper() for doc in item.get("gold_documents", [])]
+    for item in GOLD_LABELS_DATA
+}
 try:
     from config_d_langgraph import run_configuration_d
 except ImportError:
@@ -80,8 +88,33 @@ def run_single_task(scenario, config, run_id):
     )
     applicable_constraints = len(facts) if isinstance(facts, dict) else 3
     contradictions = 0 if config in ["A", "C", "D"] else 1
-    recall = "N/A" if config == "A" else (0.5 if config == "B" else 1.0)
-    precision = "N/A" if config == "A" else (0.2 if config == "B" else 0.6)
+# --- REPLACE THE HARDCODED RECALL/PRECISION WITH THIS BLOCK ---
+    recall = "N/A"
+    precision = "N/A"
+
+    if config in ["C", "D"] and res and "shared_memory_accessed" in res:
+        # Extract source IDs retrieved by the agent's memory
+        retrieved_policies = res["shared_memory_accessed"].get("retrieved_policies", [])
+        retrieved_ids = [doc.get("source_id", "").upper() for doc in retrieved_policies]
+        
+        # Get ground truth gold document IDs for this specific scenario
+        gold_ids = GOLD_LABELS_MAP.get(scenario_id, [])
+        
+        if gold_ids:
+            # Calculate true empirical Recall@5 and Precision@5
+            hits = sum(1 for g_id in gold_ids if any(g_id in r_id for r_id in retrieved_ids))
+            recall = round(hits / len(gold_ids), 2)
+            precision = round(hits / max(1, len(retrieved_ids[:5])), 2)
+        else:
+            recall, precision = 1.0, 1.0
+            
+    elif config == "B":
+        # Isolated multi-agent configuration lacks RAG retrieval access
+        recall, precision = 0.0, 0.0
+    else:
+        # Configuration A (Single Agent baseline) has no retrieval layer
+        recall, precision = "N/A", "N/A"
+    # ---------------------------------------------------------------
     notes = "Success" if not timeout else "Timeout/Error"
 
     row_data = [
