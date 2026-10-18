@@ -166,6 +166,7 @@
         "action": "Retrieve current policy and calculate staffing from it"
       }
     },
+
     {
       "scenario_id": "S12",
       "input": "Attendance rises to 240, venue capacity is 260, event duration increases by two hours and budget is reduced",
@@ -182,6 +183,441 @@
       "expected_decisions": {
         "action": "Update catering, staffing, security, budget and schedule consistently"
       }
-    }
+    },
+
+    {
+     "scenario_id": "S13",
+     "description": "Conflict testing: Database says attendance is 220 and capacity is 250, but a recent signed change notice restricts capacity to 200.",
+     "input_summary": "Event planning for 220 attendees at Venue V01 under legacy capacity rules.",
+     "hard_constraints": [
+     "Attendance cannot exceed the current authoritative capacity of 200",
+     "Must incorporate NOTICE-VENUE-2026-03"
+    ],
+     "expected_decisions": {
+     "attendance": 200,
+     "venue_capacity_limit": 200,
+     "action": "Flag infeasibility of 220 attendees; reduce attendance or reassign venue."
+    },
+     "evidence_keys": [
+     "NOTICE-VENUE-2026-03"
+     ]
+    },
+{
+  "scenario_id": "S14",
+  "description": "Conflict testing: Budget guidelines state catering cap is ₹80,000, but an updated budget memo reduces it to ₹50,000.",
+  "input_summary": "Catering allocation review under conflicting budget guidelines.",
+  "hard_constraints": [
+    "Catering spend must not exceed the updated limit of ₹50,000"
+  ],
+  "expected_decisions": {
+    "catering_limit": 50000,
+    "action": "Adopt the updated ₹50,000 limit from the recent budget memo and reject the old ₹80,000 guideline."
+  },
+  "evidence_keys": [
+    "BUDGET-MEMO-2026-02"
   ]
+},
+{
+  "scenario_id": "S15",
+  "description": "Conflict testing: Staffing policy requires 1 guard per 50 attendees, but an updated security addendum mandates 1 guard per 30 attendees for evening events.",
+  "input_summary": "Security guard calculation for an evening event with 180 attendees.",
+  "hard_constraints": [
+    "Mandatory evening security ratio of 1 guard per 30 attendees"
+  ],
+  "expected_decisions": {
+    "guard_count": 6,
+    "calculation": "180 attendees / 30 = 6 guards",
+    "action": "Apply the newer security addendum ratio rather than the standard general policy."
+  },
+  "evidence_keys": [
+    "SECURITY-ADDENDUM-EVENING-01"
+  ]
+}
+,
+  {
+    "scenario_id": "S16",
+    "description": "Conflict testing: Legacy venue brief permits alcohol service until 23:00, but an updated municipal notice curtails alcohol service to 21:30.",
+    "input_summary": "Schedule catering and bar service for an evening reception ending at 23:00.",
+    "hard_constraints": [
+      "Alcohol service must end by 21:30 per NOTICE-ALCOHOL-2026-01",
+      "Total catering spend must stay within allocated budget"
+    ],
+    "expected_decisions": {
+      "alcohol_cutoff_time": "21:30",
+      "action": "Adjust catering timeline to cease alcohol service at 21:30 while continuing non-alcoholic beverages until 23:00."
+    },
+    "evidence_keys": [
+      "NOTICE-ALCOHOL-2026-01"
+    ]
+  },
+  {
+    "scenario_id": "S17",
+    "description": "Conflict testing: Old venue policy mandates 1 emergency exit per 100 people, but a new fire safety ordinance requires 1 exit per 75 people.",
+    "input_summary": "Layout plan for 220 attendees at Venue V02.",
+    "hard_constraints": [
+      "Must provide at least 3 unobstructed emergency exits per FIRE-SAFETY-ORD-2026"
+    ],
+    "expected_decisions": {
+      "required_exits": 3,
+      "calculation": "ceil(220 / 75) = 3 exits",
+      "action": "Reject 2-exit floor plan and mandate a 3-exit room layout."
+    },
+    "evidence_keys": [
+      "FIRE-SAFETY-ORD-2026"
+    ]
+  },
+  {
+    "scenario_id": "S18",
+    "description": "Conflict testing: Baseline budget policy allows a 10% contingency buffer, but a recent financial memo freezes all contingency buffers to 0%.",
+    "input_summary": "Budget allocation for a ₹1,50,000 corporate seminar.",
+    "hard_constraints": [
+      "Total proposed expenses must equal or be less than ₹1,50,000 with 0% contingency buffer per MEMO-FIN-2026-04"
+    ],
+    "expected_decisions": {
+      "contingency_allocation": 0,
+      "action": "Allocate 100% of available funds directly to line items without adding a 10% reserve."
+    },
+    "evidence_keys": [
+      "MEMO-FIN-2026-04"
+    ]
+  },
+  {
+    "scenario_id": "S19",
+    "description": "Information fragmentation: Dietary preferences update was logged in a recent change notice but not reflected in the main SQLite event database.",
+    "input_summary": "Catering planning for 150 attendees where 30 vegan and 20 gluten-free meals are required.",
+    "hard_constraints": [
+      "Must provide at least 30 vegan meals and 20 gluten-free meals per CHANGE-DIET-2026-02",
+      "Total meal count must equal or exceed 150"
+    ],
+    "expected_decisions": {
+      "vegan_meals": 30,
+      "gluten_free_meals": 20,
+      "action": "Update catering breakdown to reflect the dietary change notice over standard database counts."
+    },
+    "evidence_keys": [
+      "CHANGE-DIET-2026-02"
+    ]
+  },
+  {
+    "scenario_id": "S20",
+    "description": "Conflict testing: Staffing policy permits 8-hour shifts without overtime pay, but a revised HR labor agreement requires overtime pay after 6 hours.",
+    "input_summary": "Staffing cost calculation for a 9-hour event shift involving 10 personnel.",
+    "hard_constraints": [
+      "Apply 1.5x overtime multiplier for hours exceeding 6 per HR-AGREEMENT-2026-03"
+    ],
+    "expected_decisions": {
+      "overtime_hours_per_staff": 3,
+      "action": "Include 3 hours of overtime pay per staff member in the staffing budget calculation."
+    },
+    "evidence_keys": [
+      "HR-AGREEMENT-2026-03"
+    ]
+  },
+  {
+    "scenario_id": "S21",
+    "description": "Cross-departmental dependency: Security requires dedicated screening stations that reduce usable venue floor area, lowering max capacity from 250 to 210.",
+    "input_summary": "Coordinating security layout and ticket sales for 230 planned guests.",
+    "hard_constraints": [
+      "Effective venue capacity drops to 210 when screening stations are active per SEC-LAYOUT-SPEC-01"
+    ],
+    "expected_decisions": {
+      "effective_capacity": 210,
+      "action": "Flag capacity violation for 230 guests; cap attendance at 210 or select a larger venue."
+    },
+    "evidence_keys": [
+      "SEC-LAYOUT-SPEC-01"
+    ]
+  },
+  {
+    "scenario_id": "S22",
+    "description": "Conflict testing: Legacy venue rules allow setup 1 hour before the event, but an updated facility bulletin mandates a minimum 2.5-hour setup window.",
+    "input_summary": "Schedule staffing and catering setup for an event starting at 14:00.",
+    "hard_constraints": [
+      "Setup shift start time must be 11:30 or earlier per BULLETIN-FACILITY-2026-05"
+    ],
+    "expected_decisions": {
+      "setup_start_time": "11:30",
+      "action": "Adjust staffing schedule and facility rental time to accommodate 2.5 hours of setup."
+    },
+    "evidence_keys": [
+      "BULLETIN-FACILITY-2026-05"
+    ]
+  },
+  {
+    "scenario_id": "S23",
+    "description": "Conflict testing: General budget rule assigns 40% of funds to catering, but an VIP addendum caps catering at 25% and prioritizes security.",
+    "input_summary": "Budget allocation of ₹3,00,000 for a High-Risk VIP Summit.",
+    "hard_constraints": [
+      "Catering expenditure capped at ₹75,000 (25%) per VIP-SECURITY-POLICY-01"
+    ],
+    "expected_decisions": {
+      "catering_max_spend": 75000,
+      "action": "Reallocate budget from catering to security and executive protection."
+    },
+    "evidence_keys": [
+      "VIP-SECURITY-POLICY-01"
+    ]
+  },
+  {
+    "scenario_id": "S24",
+    "description": "Conflict testing: Noise ordinance in venue policy listed 22:00 cutoff, but an updated sound permit mandates outdoor music stop at 20:00.",
+    "input_summary": "Outdoor gala entertainment schedule running from 18:00 to 22:00.",
+    "hard_constraints": [
+      "Outdoor sound system must be powered down by 20:00 per PERMIT-SOUND-2026-08"
+    ],
+    "expected_decisions": {
+      "outdoor_sound_cutoff": "20:00",
+      "action": "Move acoustic performances indoors after 20:00 or end live music at 20:00."
+    },
+    "evidence_keys": [
+      "PERMIT-SOUND-2026-08"
+    ]
+  },
+  {
+    "scenario_id": "S25",
+    "description": "Information fragmentation: Event duration extended by 2 hours in a late change notice; security and catering shifts must be extended accordingly.",
+    "input_summary": "Operational adjustment for Event EVT-105 extending from 4 hours to 6 hours.",
+    "hard_constraints": [
+      "All active shifts and catering coverage must extend to match 6-hour total duration per EXTENSION-NOTICE-105"
+    ],
+    "expected_decisions": {
+      "revised_duration_hours": 6,
+      "action": "Recalculate total staff hours, security shift coverage, and catering hourly service charges."
+    },
+    "evidence_keys": [
+      "EXTENSION-NOTICE-105"
+    ]
+  },
+  {
+    "scenario_id": "S26",
+    "description": "Conflict testing: General policy allows standard buffet setup, but a health department notice mandates pre-packaged meals for outdoor events.",
+    "input_summary": "Catering service style selection for an outdoor lawn event with 180 attendees.",
+    "hard_constraints": [
+      "Must use pre-packaged individual meals per HEALTH-DEPT-OUTDOOR-2026"
+    ],
+    "expected_decisions": {
+      "catering_service_style": "Pre-packaged individual meals",
+      "action": "Reject self-service buffet proposal and apply individual packaging unit prices."
+    },
+    "evidence_keys": [
+      "HEALTH-DEPT-OUTDOOR-2026"
+    ]
+  },
+  {
+    "scenario_id": "S27",
+    "description": "Conflict testing: Standard catering allows peanut-based snacks, but an updated allergen safety directive mandates a strict peanut-free facility.",
+    "input_summary": "Snack and beverage menu planning for a 200-person corporate conference.",
+    "hard_constraints": [
+      "Zero peanut or nut-based products permitted per ALLERGEN-DIRECTIVE-2026"
+    ],
+    "expected_decisions": {
+      "peanut_free_status": true,
+      "action": "Audit catering menu and eliminate all items containing peanut derivatives."
+    },
+    "evidence_keys": [
+      "ALLERGEN-DIRECTIVE-2026"
+    ]
+  },
+  {
+    "scenario_id": "S28",
+    "description": "Conflict testing: General staffing rule allows 1 supervisor per 10 staff, but a high-security protocol update requires 1 supervisor per 5 staff.",
+    "input_summary": "Staff supervisory hierarchy calculation for 30 event personnel.",
+    "hard_constraints": [
+      "Mandatory 1:5 supervisor-to-staff ratio per HIGH-SEC-STAFF-02"
+    ],
+    "expected_decisions": {
+      "required_supervisors": 6,
+      "calculation": "30 staff / 5 = 6 supervisors",
+      "action": "Assign 6 supervisors instead of the legacy requirement of 3."
+    },
+    "evidence_keys": [
+      "HIGH-SEC-STAFF-02"
+    ]
+  },
+  {
+    "scenario_id": "S29",
+    "description": "Information fragmentation: Venue parking capacity is listed as 100 cars in the database, but a recent construction notice closes half of the parking lot.",
+    "input_summary": "Parking and shuttle coordination for 150 incoming vehicle attendees.",
+    "hard_constraints": [
+      "Available parking capped at 50 cars per CONSTRUCTION-NOTICE-PARKING-04"
+    ],
+    "expected_decisions": {
+      "parking_capacity": 50,
+      "action": "Flag parking deficit and arrange off-site parking or attendee shuttle service."
+    },
+    "evidence_keys": [
+      "CONSTRUCTION-NOTICE-PARKING-04"
+    ]
+  },
+  {
+    "scenario_id": "S30",
+    "description": "Conflict testing: Budget spreadsheet assumes 5% tax, but a revised government financial decree updates event service tax to 12%.",
+    "input_summary": "Tax calculation on a ₹1,00,000 baseline catering and venue service contract.",
+    "hard_constraints": [
+      "Apply 12% service tax rate per TAX-DECREE-2026-09"
+    ],
+    "expected_decisions": {
+      "tax_rate_pct": 12,
+      "calculated_tax": 12000,
+      "action": "Recalculate total budget expenditure incorporating the 12% tax rate."
+    },
+    "evidence_keys": [
+      "TAX-DECREE-2026-09"
+    ]
+  },
+  {
+    "scenario_id": "S31",
+    "description": "Conflict testing: Standard first-aid policy requires 1 medic on standby, but an updated health bulletin for large gatherings mandates 1 paramedic per 100 attendees.",
+    "input_summary": "Medical staffing allocation for 250 attendees.",
+    "hard_constraints": [
+      "Minimum 3 medical personnel required per HEALTH-BULLETIN-MED-03"
+    ],
+    "expected_decisions": {
+      "medic_count": 3,
+      "calculation": "ceil(250 / 100) = 3 medics",
+      "action": "Deploy 3 medical personnel rather than the baseline single medic."
+    },
+    "evidence_keys": [
+      "HEALTH-BULLETIN-MED-03"
+    ]
+  },
+  {
+    "scenario_id": "S32",
+    "description": "Conflict testing: AV equipment power draw limits are 15kW in old specs, but a facility electrical upgrade notice restricts temporary stage power draw to 10kW.",
+    "input_summary": "Stage lighting and sound system power load planning.",
+    "hard_constraints": [
+      "Maximum temporary power draw ≤ 10kW per ELECTRICAL-SPEC-NOTICE-11"
+    ],
+    "expected_decisions": {
+      "max_power_kw": 10,
+      "action": "Opt for energy-efficient LED stage equipment to remain under the 10kW ceiling."
+    },
+    "evidence_keys": [
+      "ELECTRICAL-SPEC-NOTICE-11"
+    ]
+  },
+  {
+    "scenario_id": "S33",
+    "description": "Information fragmentation: VIP guest dietary restriction (halal requirement) was communicated via an emergency memo not yet in primary database records.",
+    "input_summary": "Catering breakdown for 40 VIP guests attending a multi-company summit.",
+    "hard_constraints": [
+      "Mandate 40 certified halal meals per VIP-DIETARY-MEMO-01"
+    ],
+    "expected_decisions": {
+      "halal_meals": 40,
+      "action": "Incorporate certified halal meal vendor pricing into the catering plan."
+    },
+    "evidence_keys": [
+      "VIP-DIETARY-MEMO-01"
+    ]
+  },
+  {
+    "scenario_id": "S34",
+    "description": "Conflict testing: General operations allow single-use plastics, but a new municipal green ordinance bans all single-use plastics at public events.",
+    "input_summary": "Catering cutleries and beverage container procurement plan.",
+    "hard_constraints": [
+      "Zero single-use plastics allowed per GREEN-ORD-PLASTIC-BAN-2026"
+    ],
+    "expected_decisions": {
+      "plastic_allowed": false,
+      "action": "Substitute all plastic cups and cutlery with biodegradable or compostable alternatives."
+    },
+    "evidence_keys": [
+      "GREEN-ORD-PLASTIC-BAN-2026"
+    ]
+  },
+  {
+    "scenario_id": "S35",
+    "description": "Conflict testing: Baseline schedule allows immediate guest entry upon arrival, but a new security vetting directive requires a mandatory 15-minute check-in queue buffer.",
+    "input_summary": "Door opening and keynote session start time coordination.",
+    "hard_constraints": [
+      "Incorporate 15-minute security check-in buffer per SEC-VETTING-DIRECTIVE-05"
+    ],
+    "expected_decisions": {
+      "doors_open_offset_minutes": 15,
+      "action": "Open doors 15 minutes earlier than scheduled program start to account for screening queues."
+    },
+    "evidence_keys": [
+      "SEC-VETTING-DIRECTIVE-05"
+    ]
+  },
+  {
+    "scenario_id": "S36",
+    "description": "Conflict testing: Normal venue curfew is midnight, but a special weekend neighborhood agreement restricts event noise and exit activity to 22:30.",
+    "input_summary": "Saturday night closing schedule for an indoor banquet ending at 23:30.",
+    "hard_constraints": [
+      "All guests and staff must vacate premises by 22:30 per NEIGHBORHOOD-AGREEMENT-SAT"
+    ],
+    "expected_decisions": {
+      "hard_curfew": "22:30",
+      "action": "Reschedule event program timeline to conclude early and ensure total guest departure by 22:30."
+    },
+    "evidence_keys": [
+      "NEIGHBORHOOD-AGREEMENT-SAT"
+    ]
+  },
+  {
+    "scenario_id": "S37",
+    "description": "Conflict testing: Staffing policy permits up to 40% volunteer staffing, but a recent labor union directive caps volunteer utilization at 15% for paid corporate events.",
+    "input_summary": "Personnel mix planning for 50 total event roles.",
+    "hard_constraints": [
+      "Maximum volunteer count ≤ 7.5 (round down to 7) per UNION-DIRECTIVE-2026"
+    ],
+    "expected_decisions": {
+      "max_volunteers": 7,
+      "paid_staff_minimum": 43,
+      "action": "Adjust staffing recruitment to ensure at least 43 paid professional staff."
+    },
+    "evidence_keys": [
+      "UNION-DIRECTIVE-2026"
+    ]
+  },
+  {
+    "scenario_id": "S38",
+    "description": "Conflict testing: Stage design blueprint weighs 800kg, but an engineering load-bearing advisory bulletin restricts elevated stage weight in Hall B to 600kg.",
+    "input_summary": "Stage platform engineering review for Hall B.",
+    "hard_constraints": [
+      "Maximum stage platform weight ≤ 600kg per STRUCTURAL-ADVISORY-HALL-B"
+    ],
+    "expected_decisions": {
+      "max_stage_weight_kg": 600,
+      "action": "Reject 800kg stage design; mandate lightweight modular staging under 600kg."
+    },
+    "evidence_keys": [
+      "STRUCTURAL-ADVISORY-HALL-B"
+    ]
+  },
+  {
+    "scenario_id": "S39",
+    "description": "Information fragmentation: Media credentialing rules updated in a press office memo requiring designated press zones separate from general attendees.",
+    "input_summary": "Seating and zone layout allocation for 20 accredited journalists.",
+    "hard_constraints": [
+      "Establish segregated press gallery per PRESS-OFFICE-MEMO-2026"
+    ],
+    "expected_decisions": {
+      "press_zone_allocated": true,
+      "action": "Incorporate a designated press gallery into security and seating allocations."
+    },
+    "evidence_keys": [
+      "PRESS-OFFICE-MEMO-2026"
+    ]
+  },
+  {
+    "scenario_id": "S40",
+    "description": "Conflict testing: Standard cleanup window is 1 hour after doors close, but a building management notice requires all teardown to be completed within 30 minutes to accommodate overnight HVAC maintenance.",
+    "input_summary": "Teardown and staff shift scheduling for event conclusion at 21:00.",
+    "hard_constraints": [
+      "Teardown must conclude by 21:30 per HVAC-MAINTENANCE-NOTICE-02"
+    ],
+    "expected_decisions": {
+      "teardown_deadline": "21:30",
+      "action": "Increase teardown crew size to compress 1 hour of work into 30 minutes safely."
+    },
+    "evidence_keys": [
+      "HVAC-MAINTENANCE-NOTICE-02"
+    ]
+  }
+]
+
+  
 }

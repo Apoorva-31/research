@@ -1,0 +1,2 @@
+Configuration,Accuracy (%),Hard Violations,Contradictions,Latency (s),Cost ($USD),Recall@5,Precision@5
+A,100.00 ± nan,0.00 ± nan,0.00 ± nan,2.95 ± nan,$0.0014,N/A,N/A

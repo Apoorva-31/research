@@ -37,6 +37,16 @@ def get_mock_plan(scenario_facts: dict) -> EventPlanOutput:
     )
 
 def run_configuration_a(scenario_input: str, scenario_facts: dict) -> dict:
+    """
+    Configuration A: Centralized Single Agent.
+    Intentionally restricted to prompt input and structured database facts.
+    It does NOT have access to document retrieval or change notices.
+    """
+    system_prompt = (
+        "You are an expert centralized event planner. You receive basic scenario facts directly. "
+        "You do NOT have access to document retrieval systems, change notices, or versioned policy folders. "
+        "Base your plan strictly on the provided facts."
+    )
     try:
         completion = client.beta.chat.completions.parse(
             model="gpt-4o",
